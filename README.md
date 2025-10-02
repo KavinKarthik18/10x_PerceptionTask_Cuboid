@@ -2,7 +2,7 @@
 
 ## Problem statement
 
-<img width="953" height="541" alt="image" src="https://github.com/user-attachments/assets/93a0b528-224a-48d9-afbc-22459213db07" />
+<img width="500" height="100" alt="image" src="https://github.com/user-attachments/assets/93a0b528-224a-48d9-afbc-22459213db07" />
 
 
 A 3D cuboidal box is rotating around its central axis, and the task is to estimate its rotation angle.  
