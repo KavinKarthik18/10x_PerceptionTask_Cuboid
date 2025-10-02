@@ -1,0 +1,2 @@
+# axis (unit vector) in camera frame
+0.99933930 -0.02692730 -0.02441083
