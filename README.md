@@ -58,10 +58,10 @@ pip install numpy opencv-python scipy
 Each depth frame is converted into a 3D point cloud using camera intrinsics `(fx, fy, cx, cy)`.  
 For a pixel `(u, v)` with depth `z`:
 
-\[
-x = \frac{(u - c_x) \cdot z}{f_x}, \quad
+$$
+x = \frac{(u - c_x) \cdot z}{f_x}, \quad 
 y = \frac{(v - c_y) \cdot z}{f_y}
-\]
+$$
 
 This produces 3D coordinates in the camera frame.
 
