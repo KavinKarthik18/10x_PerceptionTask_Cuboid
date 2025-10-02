@@ -52,34 +52,55 @@ pip install numpy opencv-python scipy
 
 ### Step 1: Depth to 3D points
 
-Each depth frame is converted into a 3D point cloud using camera intrinsics `(fx, fy, cx, cy)`.
-This produces a set of 3D coordinates in the camera frame.
+Each depth frame is converted into a 3D point cloud using camera intrinsics `(fx, fy, cx, cy)`.  
+For a pixel `(u, v)` with depth `z`:
+
+\[
+x = \frac{(u - c_x) \cdot z}{f_x}, \quad
+y = \frac{(v - c_y) \cdot z}{f_y}
+\]
+
+This produces 3D coordinates in the camera frame.
+
+---
 
 ### Step 2: Plane detection using RANSAC
 
-* Randomly sample 3 points and fit a candidate plane.
-* Count how many other points lie close to this plane (inliers).
-* Keep the plane with the most inliers.
-* Refine the plane parameters using SVD on the inliers for stability.
-* Ensure the plane normal points toward the camera (flip if needed).
+We use **RANSAC (Random Sample Consensus)** to robustly fit the largest planar face.
+
+1. Randomly sample 3 points and compute a candidate plane normal.  
+2. Count how many other points fall within a distance threshold (inliers).  
+3. Keep the plane with the maximum inliers.  
+4. Refine the plane parameters using SVD on inliers.  
+5. Flip the normal to always point toward the camera.
+
+**Why not Kalman filter?**  
+We tested adding a Kalman filter to smooth plane normals across frames. However, the cuboid rotates with large angular jumps (not small Gaussian noise). The Kalman filter smoothed away true changes instead of refining them. Since RANSAC already rejects outliers effectively, Kalman filtering was not beneficial and was removed.
+
+---
 
 ### Step 3: Face angle and visible area
 
-* Compute the angle between the detected face normal and the camera Z-axis.
-* Project inlier points onto a 2D plane and compute the convex hull.
-* The area of this convex hull gives the visible face area in m².
-* Outliers are trimmed to prevent artificially inflated areas.
+* Compute the angle between the detected face normal and the camera Z-axis.  
+* Project inlier points into a 2D plane coordinate system.  
+* Compute a convex hull around these points and take its area as the visible face area (in m²).  
+* Outlier trimming is applied to avoid inflated areas.
+
+---
 
 ### Step 4: Segmentation overlays
 
-* For each frame, recompute the full-resolution mask of inlier pixels.
-* Save overlays with inliers marked in **bright red** on top of a depth colormap.
+* For each frame, recompute the full-resolution inlier mask from the detected plane.  
+* Save overlays with inlier pixels highlighted in **bright red** on top of a depth colormap.  
+* Optionally add the convex hull outline.
+
+---
 
 ### Step 5: Axis of rotation
 
-* Collect all face normals across frames.
-* Perform PCA (SVD on the covariance matrix).
-* The eigenvector corresponding to the smallest variance direction is the estimated axis of rotation.
+* Collect all detected face normals across frames.  
+* Apply PCA (SVD) to find the direction of least variance.  
+* This direction is the estimated **axis of rotation** of the cuboid, expressed as a unit vector in the camera frame.
 
 ---
 
