@@ -112,7 +112,7 @@ We tested adding a Kalman filter to smooth plane normals across frames. However,
 ### 1. Extract depth frames from the bag
 
 ```bash
-python3 depth_bag_extractor.py depth/depth.db3
+python3 depth_bag_extractor.py
 ```
 
 Creates `frames/` containing `frame_*.npy` files.
