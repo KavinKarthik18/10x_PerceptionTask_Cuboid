@@ -172,4 +172,4 @@ Each frame shows the largest detected cuboid face in **bright red**. Example col
 
 1. **results.csv** – per-frame normal angle, visible area (m²), and face normal.
 2. **axis_of_rotation.txt** – unit rotation axis in the camera frame.
-3. **Documentation** – COmplete Documentation explaining approach and algorithm.
+3. **Documentation** – Complete Documentation explaining approach and algorithm.
